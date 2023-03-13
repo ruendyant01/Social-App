@@ -41,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function reqs() {
+        return $this->hasMany(FriendRequest::class, "to", "email");
+    }
+
+    public function blocks() {
+        return $this->hasMany(Blocked::class);
+    }
+
+    public function getRouteKeyName()
+    {
+        return "email";
+    }
 }

@@ -13,11 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('friend_requests', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
-            $table->string('email')->unique();
+            $table->string("requestor");
+            $table->string("to");
+            $table->enum("status", ['accepted', 'rejected', 'pending']);
             $table->timestamps();
+            $table->foreign("to")->references("email")->on("users");
         });
     }
 
@@ -28,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('friend_requests');
     }
 };
