@@ -16,14 +16,22 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;    
 
     public function getUserFriends(User $email) {
-        $friends = $email->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
-        return response(["friends" => $friends], Response::HTTP_OK);
+        try {
+            $friends = $email->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
+            return response(["friends" => $friends], Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            report($th->getMessage());
+        }
     }
 
     public function getCommonFriendFromFriends(Request $req) {
-        $user1 = User::where('email', $req->email1)->firstOrFail()->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
-        $user2 = User::where('email', $req->email2)->firstOrFail()->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
-        $commonFriends = $user1->merge($user2)->duplicates()->values();
+        try {
+            $user1 = User::where('email', $req->email1)->firstOrFail()->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
+            $user2 = User::where('email', $req->email2)->firstOrFail()->reqs->where("status", "accepted")->map(fn($val) => $val->requestor);
+            $commonFriends = $user1->merge($user2)->duplicates()->values();
         return response($commonFriends, Response::HTTP_OK);
+        } catch (\Throwable $th) {
+            report($th->getMessage());
+        }
     }
 }

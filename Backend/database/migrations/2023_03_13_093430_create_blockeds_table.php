@@ -16,8 +16,8 @@ return new class extends Migration
     {
         Schema::create('blockeds', function (Blueprint $table) {
             $table->id();
-            $table->string("email")->unique();
-            $table->foreignIdFor(User::class);
+            $table->string("email");
+            $table->foreignId("user_id");
             $table->timestamps();
         });
     }

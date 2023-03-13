@@ -2,7 +2,11 @@
 
 namespace App\Exceptions;
 
+use Exception;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Response;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,7 +47,12 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
+        $this->reportable(function (Exception|ModelNotFoundException|InternalErrorException $e) {
+            if(str_contains($e->getMessage(), "No query results for model")) {
+                abort(404, "Requested email not exist");
+            } else {
+                abort(404, $e->getMessage());
+            }
             //
         });
     }

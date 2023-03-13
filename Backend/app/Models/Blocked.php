@@ -9,5 +9,5 @@ class Blocked extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['email', 'user_id'];
+    protected $fillable = ['email'];
 }
